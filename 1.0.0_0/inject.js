@@ -49,7 +49,7 @@
     if (!match) return false
 
     // must not be a reserved `username`
-    if (~['settings', 'organizations', 'site', 'blog'].indexOf(match[1])) return false
+    if (~['settings', 'organizations', 'site'].indexOf(match[1])) return false
 
     // TODO: the intention is to hide the sidebar when users navigate to non-code areas (e.g. Issues, Pulls)
     // and show it again when users navigate back to the code area
@@ -71,7 +71,7 @@
       , root    = []
       , folders = { '': root }
 
-    api.getTree(encodeURIComponent(repo.branch) + '?recursive=true', function(err, tree) {
+    api.getTree(repo.branch + '?recursive=true', function(err, tree) {
       if (err) return done(err)
       tree.forEach(function(item) {
         var path   = item.path
@@ -183,15 +183,13 @@
 
   function Storage() {
     this.get = function(key) {
-      var val = localStorage.getItem(key)
-      try {
-        return JSON.parse(val)
-      } catch (e) {
-        return val
-      }
+      return JSON.parse(localStorage.getItem(key))
     }
     this.set = function(key, val) {
       return localStorage.setItem(key, JSON.stringify(val))
+    }
+    this.del = function(key) {
+      return localStorage.removeItem(key)
     }
   }
 })()
